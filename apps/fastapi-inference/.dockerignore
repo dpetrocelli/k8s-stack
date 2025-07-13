@@ -1,0 +1,44 @@
+# Git
+.git
+.gitignore
+
+# CI/CD
+.github
+.gitlab-ci.yml
+Jenkinsfile
+
+# Documentation
+README.md
+docs/
+*.md
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Dependencies (for multi-stage builds, copy these in specific stages)
+node_modules/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Test files
+tests/
+*_test.go
+*_test.py
+test_*.py
+
+# Development files
+.env.local
+.env.development
+docker-compose.dev.yml

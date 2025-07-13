@@ -1,0 +1,16 @@
+apiVersion: v2
+name: fastapi-inference
+description: FastAPI inference API with Ollama and Bedrock fallback
+type: application
+version: 0.1.0
+appVersion: "1.0.0"
+keywords:
+  - fastapi
+  - ai
+  - inference
+  - ollama
+  - bedrock
+home: https://github.com/unlu/k8s-stack
+maintainers:
+  - name: AI Team
+    email: ai-team@example.com
