@@ -40,9 +40,11 @@ else
     print_warning "istioctl not found in PATH, checking for local installation..."
     # Check for local Istio installation
     found_istio=false
-    for istio_dir in istio-*/bin; do
+    for istio_dir in ../istio-*/bin; do
         if [ -d "$istio_dir" ]; then
-            export PATH="$PWD/$istio_dir:$PATH"
+            local parent_dir
+            parent_dir="$(cd .. && pwd)"
+            export PATH="$parent_dir/${istio_dir#../}:$PATH"
             print_success "Found local istioctl, added to PATH"
             ISTIOCTL_VERSION=$(istioctl version --short 2>/dev/null || echo "Unable to get version")
             print_success "istioctl version: $ISTIOCTL_VERSION"

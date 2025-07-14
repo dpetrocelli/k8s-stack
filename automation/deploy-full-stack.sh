@@ -9,13 +9,13 @@ echo "======================================"
 # Step 1: Setup k3d clusters
 echo ""
 echo "📋 Step 1: Setting up k3d clusters..."
-if [ ! -f "./setup.sh" ]; then
-    echo "❌ setup.sh not found in current directory"
+if [ ! -f "../bootstrap_cluster/setup.sh" ]; then
+    echo "❌ setup.sh not found in bootstrap_cluster directory"
     exit 1
 fi
 
-chmod +x setup.sh
-./setup.sh
+chmod +x ../bootstrap_cluster/setup.sh
+../bootstrap_cluster/setup.sh
 
 # Step 2: Install Istio service mesh
 echo ""
@@ -24,14 +24,14 @@ echo "🕸️  Step 2: Installing Istio service mesh..."
 # Check if istioctl is installed
 if ! command -v istioctl &> /dev/null; then
     # Check if istio is already downloaded locally
-    ISTIO_DIR=$(find "$PWD" -maxdepth 1 -type d -name "istio-*" | head -1)
+    ISTIO_DIR=$(find "$PWD/.." -maxdepth 1 -type d -name "istio-*" | head -1)
     if [ -n "$ISTIO_DIR" ] && [ -f "$ISTIO_DIR/bin/istioctl" ]; then
         echo "ℹ️  Found local Istio installation at $ISTIO_DIR, adding to PATH..."
         export PATH="$ISTIO_DIR/bin:$PATH"
     else
         echo "📦 Installing istioctl..."
         curl -L https://istio.io/downloadIstio | sh -
-        ISTIO_DIR=$(find "$PWD" -maxdepth 1 -type d -name "istio-*" | head -1)
+        ISTIO_DIR=$(find "$PWD/.." -maxdepth 1 -type d -name "istio-*" | head -1)
         export PATH="$ISTIO_DIR/bin:$PATH"
         echo "⚠️  Note: istioctl added to PATH for this session only"
         echo "   To persist, add $ISTIO_DIR/bin to your PATH"
