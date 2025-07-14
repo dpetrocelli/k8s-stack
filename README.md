@@ -33,7 +33,7 @@ and integrated monitoring.
 3. **Deploy the full stack:**
 
    ```bash
-   ./deploy-full-stack.sh
+   ./deploy.sh
    ```
 
 This will create two k3d clusters with Istio service mesh:
@@ -99,46 +99,89 @@ pre-commit run --all-files
 - 🔒 **Security**: Secret detection, private key scanning
 - 📝 **Documentation**: Markdown linting
 
-See [Pre-commit Setup Guide](guidelines/precommit_setup.md) for detailed configuration.
+See [Pre-commit Setup Guide](docs/guidelines/precommit_setup.md) for detailed configuration.
 
 ### Project Guidelines
 
-- [Development Guidelines](guidelines/development_guidelines.md)
-- [Contributing Guide](guidelines/contributing.md)
-- [Security Guidelines](guidelines/security_guidelines.md)
-- [Python Guidelines](guidelines/python_guidelines.md)
-- [AWS Guidelines](guidelines/aws_guidelines.md)
+- [Development Guidelines](docs/guidelines/development_guidelines.md)
+- [Contributing Guide](docs/guidelines/contributing.md)
+- [Security Guidelines](docs/guidelines/security_guidelines.md)
+- [Python Guidelines](docs/guidelines/python_guidelines.md)
+- [AWS Guidelines](docs/guidelines/aws_guidelines.md)
 
 ## 📁 Project Structure
 
 ```text
 k8s-stack/
-├── apps/                      # Application source code
-│   ├── agent-orchestrator/    # AI agent coordination
-│   ├── fastapi-inference/     # FastAPI inference service
-│   ├── n8n-workflows/         # Workflow definitions
-│   ├── rag-api/              # RAG implementation
-│   └── vector-db/            # Vector database config
-├── ci-cd/                    # CI/CD configurations
-│   ├── argocd/               # ArgoCD applications
-│   ├── github-actions/       # GitHub workflows
-│   └── prompt-validation/    # Prompt testing
-├── clusters/                 # Cluster-specific configs
-│   ├── cluster-a/            # Agent orchestrator cluster
-│   └── cluster-b/            # AI runtime cluster
-├── docs/                     # Project documentation
-├── guidelines/               # Development guidelines
-├── helm/                     # Helm charts
-│   ├── charts/               # Application charts
-│   └── values/               # Environment values
-├── monitoring/               # Observability stack
-│   ├── grafana/              # Dashboards and config
-│   ├── jaeger/               # Distributed tracing
-│   ├── loki/                 # Log aggregation
-│   └── prometheus/           # Metrics collection
-├── scripts/                  # Utility scripts
-├── setup.sh                 # Cluster setup script
-└── deploy-full-stack.sh      # Full deployment script
+├── 🚀 deploy.sh                    # Single-command entry point
+├── 🏗️ bootstrap_cluster/           # Cluster creation & setup
+│   └── setup.sh                   # k3d cluster creation script
+├── 🕸️ istio/                       # Service mesh components
+│   ├── install-istio.sh           # Istio installation script
+│   ├── check-istio.sh             # Health check & verification
+│   └── istio-commands-reference.md # Command reference guide
+├── 🤖 automation/                  # Deployment automation
+│   └── deploy-full-stack.sh       # Complete stack deployment
+├── 📚 docs/                        # Documentation
+│   ├── project-structure.md       # This structure guide
+│   └── guidelines/                # Development guidelines
+├── 🐳 apps/                        # Application components
+│   ├── fastapi-inference/         # FastAPI inference service
+│   ├── agent-orchestrator/        # AI agent coordination
+│   ├── n8n-workflows/             # Workflow definitions
+│   ├── rag-api/                   # RAG implementation
+│   └── vector-db/                 # Vector database config
+├── ⎈ helm/                         # Helm charts
+│   ├── charts/                    # Application charts
+│   └── values/                    # Environment values
+├── 🔧 scripts/                     # Utility scripts
+│   ├── check-dockerfile.sh        # Dockerfile validation
+│   └── check-k8s-secrets.sh      # K8s secrets security
+└── 📊 monitoring/                  # Observability stack
+    ├── grafana/                   # Dashboards and config
+    ├── jaeger/                    # Distributed tracing
+    ├── loki/                      # Log aggregation
+    └── prometheus/                # Metrics collection
+```
+
+### 🎯 **Folder-Specific Usage**
+
+Each folder is designed for specific use cases and can be used independently:
+
+| Folder | Use Case | Commands |
+|--------|----------|----------|
+| **🚀 Root** | Complete automation | `./deploy.sh` |
+| **🏗️ bootstrap_cluster** | Just cluster setup | `./bootstrap_cluster/setup.sh` |
+| **🕸️ istio** | Service mesh only | `./istio/install-istio.sh`, `./istio/check-istio.sh` |
+| **🤖 automation** | Full stack orchestration | `cd automation && ./deploy-full-stack.sh` |
+| **🐳 apps** | Application development | `docker build`, `kubectl apply` |
+| **⎈ helm** | Package management | `helm install`, `helm upgrade` |
+| **🔧 scripts** | Utility operations | `./scripts/check-*.sh` |
+| **📚 docs** | Documentation reference | Markdown files and guides |
+
+### 📋 **Configuration Patterns**
+
+**Development Workflow:**
+```bash
+# Quick iteration
+./bootstrap_cluster/setup.sh    # Create clusters
+./istio/install-istio.sh        # Add service mesh
+helm install app ./helm/charts/fastapi-inference/
+```
+
+**Production Deployment:**
+```bash
+# Complete automation
+./deploy.sh                     # Everything automated
+./istio/check-istio.sh         # Verify health
+```
+
+**Troubleshooting:**
+```bash
+# Component-specific debugging
+./istio/check-istio.sh         # Service mesh health
+./scripts/check-k8s-secrets.sh # Security validation
+kubectl get pods -A            # Overall status
 ```
 
 ## 🔧 Usage
@@ -146,8 +189,13 @@ k8s-stack/
 ### Cluster Management
 
 ```bash
-# Setup clusters
-./setup.sh
+# Complete setup (recommended)
+./deploy.sh
+
+# Individual components
+./bootstrap_cluster/setup.sh        # Just clusters
+./istio/install-istio.sh            # Just Istio
+./istio/check-istio.sh              # Verify health
 
 # Check cluster status
 kubectl config get-contexts
@@ -227,13 +275,15 @@ kubeseal --format yaml < secret.yaml > sealed-secret.yaml
 ### Local Development
 
 ```bash
-# Quick setup
-./setup.sh
-./deploy-full-stack.sh
+# Single command setup
+./deploy.sh
 
 # Access services
 echo "Cluster A: http://localhost:8080"
 echo "Cluster B: http://localhost:9080"
+
+# Verify installation
+./istio/check-istio.sh
 ```
 
 ### Production Deployment
