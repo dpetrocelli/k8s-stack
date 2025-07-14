@@ -42,7 +42,6 @@ else
     found_istio=false
     for istio_dir in ../istio-*/bin; do
         if [ -d "$istio_dir" ]; then
-            local parent_dir
             parent_dir="$(cd .. && pwd)"
             export PATH="$parent_dir/${istio_dir#../}:$PATH"
             print_success "Found local istioctl, added to PATH"

@@ -10,10 +10,8 @@ k8s-stack/
 ├── 🔒 .secrets.baseline              # Security scanning baseline
 ├── 📦 .gitignore                     # Git ignore rules
 │
-├── 🏗️  bootstrap_cluster/            # Cluster Creation & Setup
-│   └── setup.sh                     # k3d cluster creation script
-│
-├── 🕸️  istio/                        # Service Mesh Components
+├── 🏗️  bootstrap_cluster/            # Complete Cluster Bootstrap
+│   ├── setup.sh                     # k3d cluster creation script
 │   ├── install-istio.sh             # Istio installation script
 │   ├── check-istio.sh               # Health check & verification
 │   └── istio-commands-reference.md  # Command reference guide
@@ -71,22 +69,12 @@ This runs the complete automated setup:
 
 ### **Individual Components**
 
-#### **Bootstrap Clusters**
+#### **Bootstrap Complete Infrastructure**
 
 ```bash
-./bootstrap_cluster/setup.sh
-```
-
-#### **Install Istio**
-
-```bash
-./istio/install-istio.sh
-```
-
-#### **Verify Installation**
-
-```bash
-./istio/check-istio.sh
+./bootstrap_cluster/setup.sh           # Create k3d clusters
+./bootstrap_cluster/install-istio.sh   # Install service mesh
+./bootstrap_cluster/check-istio.sh     # Verify installation
 ```
 
 #### **Deploy Applications**
@@ -99,8 +87,7 @@ helm install fastapi-inference ./helm/charts/fastapi-inference/
 
 | Folder | Purpose | Key Files |
 |--------|---------|-----------|
-| **bootstrap_cluster** | k3d cluster creation and initial setup | `setup.sh` |
-| **istio** | Service mesh installation and management | `install-istio.sh`, `check-istio.sh` |
+| **bootstrap_cluster** | Complete cluster bootstrap (k3d + Istio) | `setup.sh`, `install-istio.sh`, `check-istio.sh` |
 | **automation** | Complete stack deployment automation | `deploy-full-stack.sh` |
 | **apps** | Application source code and configurations | `fastapi-inference/` |
 | **helm** | Kubernetes application package management | Chart templates and values |

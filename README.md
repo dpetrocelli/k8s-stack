@@ -114,9 +114,8 @@ See [Pre-commit Setup Guide](docs/guidelines/precommit_setup.md) for detailed co
 ```text
 k8s-stack/
 ├── 🚀 deploy.sh                    # Single-command entry point
-├── 🏗️ bootstrap_cluster/           # Cluster creation & setup
-│   └── setup.sh                   # k3d cluster creation script
-├── 🕸️ istio/                       # Service mesh components
+├── 🏗️ bootstrap_cluster/           # Complete cluster bootstrap
+│   ├── setup.sh                   # k3d cluster creation script
 │   ├── install-istio.sh           # Istio installation script
 │   ├── check-istio.sh             # Health check & verification
 │   └── istio-commands-reference.md # Command reference guide
@@ -151,8 +150,7 @@ Each folder is designed for specific use cases and can be used independently:
 | Folder | Use Case | Commands |
 |--------|----------|----------|
 | **🚀 Root** | Complete automation | `./deploy.sh` |
-| **🏗️ bootstrap_cluster** | Just cluster setup | `./bootstrap_cluster/setup.sh` |
-| **🕸️ istio** | Service mesh only | `./istio/install-istio.sh`, `./istio/check-istio.sh` |
+| **🏗️ bootstrap_cluster** | Complete cluster bootstrap | `./bootstrap_cluster/setup.sh`, `./bootstrap_cluster/install-istio.sh`, `./bootstrap_cluster/check-istio.sh` |
 | **🤖 automation** | Full stack orchestration | `cd automation && ./deploy-full-stack.sh` |
 | **🐳 apps** | Application development | `docker build`, `kubectl apply` |
 | **⎈ helm** | Package management | `helm install`, `helm upgrade` |
@@ -162,26 +160,29 @@ Each folder is designed for specific use cases and can be used independently:
 ### 📋 **Configuration Patterns**
 
 **Development Workflow:**
+
 ```bash
 # Quick iteration
-./bootstrap_cluster/setup.sh    # Create clusters
-./istio/install-istio.sh        # Add service mesh
+./bootstrap_cluster/setup.sh        # Create clusters
+./bootstrap_cluster/install-istio.sh # Add service mesh
 helm install app ./helm/charts/fastapi-inference/
 ```
 
 **Production Deployment:**
+
 ```bash
 # Complete automation
-./deploy.sh                     # Everything automated
-./istio/check-istio.sh         # Verify health
+./deploy.sh                            # Everything automated
+./bootstrap_cluster/check-istio.sh    # Verify health
 ```
 
 **Troubleshooting:**
+
 ```bash
 # Component-specific debugging
-./istio/check-istio.sh         # Service mesh health
-./scripts/check-k8s-secrets.sh # Security validation
-kubectl get pods -A            # Overall status
+./bootstrap_cluster/check-istio.sh    # Service mesh health
+./scripts/check-k8s-secrets.sh        # Security validation
+kubectl get pods -A                   # Overall status
 ```
 
 ## 🔧 Usage
@@ -193,9 +194,9 @@ kubectl get pods -A            # Overall status
 ./deploy.sh
 
 # Individual components
-./bootstrap_cluster/setup.sh        # Just clusters
-./istio/install-istio.sh            # Just Istio
-./istio/check-istio.sh              # Verify health
+./bootstrap_cluster/setup.sh           # Just clusters
+./bootstrap_cluster/install-istio.sh   # Just Istio
+./bootstrap_cluster/check-istio.sh     # Verify health
 
 # Check cluster status
 kubectl config get-contexts
@@ -283,7 +284,7 @@ echo "Cluster A: http://localhost:8080"
 echo "Cluster B: http://localhost:9080"
 
 # Verify installation
-./istio/check-istio.sh
+./bootstrap_cluster/check-istio.sh
 ```
 
 ### Production Deployment
